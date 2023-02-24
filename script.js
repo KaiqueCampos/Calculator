@@ -1,5 +1,5 @@
-let runningTotal = 0;
-let buffer = "0";
+let operationResult = 0;
+let screenNumbers = "0";
 let previousOperator;
 
 const calcScreen = document.querySelector(".calc-screen");
@@ -16,14 +16,15 @@ function buttonClick(value) {
     handledNumber(value);
   }
 
-  calcScreen.innerText = buffer;
+  calcScreen.innerText = screenNumbers;
 }
 
 function handledSymbol(symbol) {
   switch (symbol) {
     case "C":
-      buffer = "0";
-      runningTotal = 0;
+      previousOperator = null;
+      screenNumbers = "0";
+      operationResult = 0;
 
       if (larrButton.disabled === true) {
         larrButton.disabled = false;
@@ -31,10 +32,10 @@ function handledSymbol(symbol) {
       break;
 
     case "←":
-      if (buffer.length === 1) {
-        buffer = "0";
+      if (screenNumbers.length === 1) {
+        screenNumbers = "0";
       } else {
-        buffer = buffer.slice(0, -1);
+        screenNumbers = screenNumbers.slice(0, -1);
       }
       break;
 
@@ -43,10 +44,10 @@ function handledSymbol(symbol) {
         return;
       }
 
-      flushOperator(parseInt(buffer));
+      flushOperator(parseInt(screenNumbers));
       previousOperator = "=";
-      buffer = runningTotal;
-      runningTotal = 0;
+      screenNumbers = operationResult;
+      operationResult = 0;
 
       larrButton.disabled = true;
       break;
@@ -64,40 +65,40 @@ function handledSymbol(symbol) {
 }
 
 function handleMath(symbol) {
-  if (buffer === "0") {
+  if (screenNumbers === "0") {
     return;
   }
 
-  const intBuffer = parseInt(buffer);
+  const intScreenNumbers = parseInt(screenNumbers);
 
-  if (runningTotal === 0) {
-    runningTotal = intBuffer;
+  if (operationResult === 0) {
+    operationResult = intScreenNumbers;
   } else {
-    flushOperator(intBuffer);
+    flushOperator(intScreenNumbers);
   }
 
   previousOperator = symbol;
-  buffer = "0";
+  screenNumbers = "0";
 }
 
 function handledNumber(numberString) {
-  if (buffer === "0") {
-    buffer = numberString;
+  if (screenNumbers === "0") {
+    screenNumbers = numberString;
   } else {
-    buffer += numberString;
+    screenNumbers += numberString;
     larrButton.disabled = false;
   }
 }
 
-function flushOperator(intBuffer) {
+function flushOperator(intScreenNumbers) {
   if (previousOperator === "+") {
-    runningTotal += intBuffer;
+    operationResult += intScreenNumbers;
   } else if (previousOperator === "−") {
-    runningTotal -= intBuffer;
+    operationResult -= intScreenNumbers;
   } else if (previousOperator === "×") {
-    runningTotal *= intBuffer;
+    operationResult *= intScreenNumbers;
   } else if (previousOperator === "÷") {
-    runningTotal /= intBuffer;
+    operationResult /= intScreenNumbers;
   }
 }
 
