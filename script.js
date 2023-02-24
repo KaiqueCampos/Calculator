@@ -9,6 +9,10 @@ function buttonClick(value) {
   if (isNaN(value)) {
     handledSymbol(value);
   } else {
+    if (previousOperator === "=") {
+      return;
+    }
+
     handledNumber(value);
   }
 
@@ -20,6 +24,10 @@ function handledSymbol(symbol) {
     case "C":
       buffer = "0";
       runningTotal = 0;
+
+      if (larrButton.disabled === true) {
+        larrButton.disabled = false;
+      }
       break;
 
     case "←":
@@ -31,12 +39,12 @@ function handledSymbol(symbol) {
       break;
 
     case "=":
-      if (previousOperator == null) {
+      if (previousOperator === null) {
         return;
       }
 
       flushOperator(parseInt(buffer));
-      previousOperator = null;
+      previousOperator = "=";
       buffer = runningTotal;
       runningTotal = 0;
 
@@ -48,6 +56,9 @@ function handledSymbol(symbol) {
     case "−":
     case "+":
       handleMath(symbol);
+      if (larrButton.disabled === true) {
+        larrButton.disabled = false;
+      }
       break;
   }
 }
@@ -91,6 +102,8 @@ function flushOperator(intBuffer) {
 }
 
 function init() {
+  console.log(previousOperator);
+
   document
     .querySelector(".calc-buttons")
     .addEventListener("click", function (event) {
