@@ -108,6 +108,12 @@ function init() {
     .querySelector(".calc-buttons")
     .addEventListener("click", function (event) {
       buttonClick(event.target.innerText);
+
+      if(event.target.innerText === "="){
+        document.querySelector('.equals').disabled = true;
+      } else {
+        document.querySelector('.equals').disabled = false;
+      }
     });
 }
 
